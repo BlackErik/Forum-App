@@ -7,6 +7,8 @@ var app = new Vue({
     loginEmailInput: "",
     loginPasswordInput: "",
 
+    errorMessage: "",
+
     newEmailInput: "",
     newPasswordInput: "",
     newFullNameInput: "",
@@ -24,6 +26,8 @@ var app = new Vue({
         console.log("logged in ");
         let data = await response.json();
         console.log(data);
+
+        this.page = "logged in";
       } else if (response.status == 401) {
         // not logged in
         console.log("Not logged in");
@@ -50,10 +54,6 @@ var app = new Vue({
         credentials: "include",
       });
 
-      // parse response body
-      let body = response.json();
-      console.log(body);
-
       // was the login successful
       if (response.status == 201) {
         console.log("Successful login attempt");
@@ -61,10 +61,12 @@ var app = new Vue({
         this.loginEmailInput = "";
         this.loginPasswordInput = "";
 
+        this.errorMessage = "";
+        this.page = "logged in";
         // take user to a home page
       } else if (response.status == 401) {
         console.log("Unsuccessful login attempt");
-        alert("Unsuccessful login");
+        this.errorMessage = "Unsuccessful login";
 
         this.loginPasswordInput = "";
       } else {
@@ -90,14 +92,16 @@ var app = new Vue({
       });
       let body = response.json();
       console.log(body);
-
       if (response.status == 201) {
         console.log("sucessful create user attempt");
         this.newEmailInput = "";
         this.newPasswordInput = "";
         this.newFullNameInput = "";
+        this.page = "login";
+        this.errorMessage = "";
       } else {
         console.log("Some error in POST /user", response.status, response);
+        this.errorMessage = "Registration Unsuccessful";
       }
     },
   },

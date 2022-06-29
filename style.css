@@ -13,3 +13,7 @@ div {
 input {
   text-align: center;
 }
+
+.error-message {
+  color: red;
+}
