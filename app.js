@@ -71,6 +71,7 @@ var app = new Vue({
         this.loginPasswordInput = "";
       } else {
         console.log("Some error in POST /session", response.status, response);
+        this.errorMessage = "Unsuccessful login";
       }
     },
 
