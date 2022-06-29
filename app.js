@@ -73,6 +73,31 @@ var app = new Vue({
     },
 
     // POST /user - create a user
+    postUser: async function () {
+      let registrationCredentials = {
+        username: this.newEmailInput,
+        fullname: this.newFullNameInput,
+        password: this.newPasswordInput,
+      };
+
+      let response = await fetch(`${API_URL}/user`, {
+        method: "POST",
+        body: JSON.stringify(registrationCredentials),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+      let body = response.json();
+      console.log(body);
+
+      if (response.status == 201) {
+        console.log("sucessful create user attempt");
+        this.newEmailInput = "";
+        this.newPasswordInput = "";
+        this.newFullNameInput = "";
+      }
+    },
   },
   created: function () {
     this.getSession();

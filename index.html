@@ -31,11 +31,15 @@
         <h1>Registration Form</h1>
         <input v-model="newEmailInput" placeholder="Email" />
         <br /><br />
-        <input v-model="newPasswordInput" placeholder="Password" />
+        <input
+          type="password"
+          v-model="newPasswordInput"
+          placeholder="Password"
+        />
         <br /><br />
         <input v-model="newFullNameInput" placeholder="Full Name" />
         <br /><br />
-        <button @click="">Register</button>
+        <button @click="postUser(), page='login'">Register</button>
       </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
