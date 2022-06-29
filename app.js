@@ -96,6 +96,8 @@ var app = new Vue({
         this.newEmailInput = "";
         this.newPasswordInput = "";
         this.newFullNameInput = "";
+      } else {
+        console.log("Some error in POST /user", response.status, response);
       }
     },
   },
