@@ -12,6 +12,7 @@ var app = new Vue({
     newEmailInput: "",
     newPasswordInput: "",
     newFullNameInput: "",
+    threads: [],
   },
   methods: {
     //GET /session - Asks the server if we are logged in
@@ -105,8 +106,18 @@ var app = new Vue({
         this.errorMessage = "Registration Unsuccessful";
       }
     },
+
+    getThreads: async function () {
+      let response = await fetch(`${API_URL}/thread`, {
+        credentials: "include",
+      });
+      let data = await response.json();
+      this.threads = data;
+      console.log(data);
+    },
   },
   created: function () {
     this.getSession();
+    this.getThreads();
   },
 });
