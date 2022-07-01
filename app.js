@@ -165,6 +165,7 @@ var app = new Vue({
       });
       let data = await response.json();
       console.log(data);
+      this.getThread(id);
     },
 
     deleteThread: async function (id) {
