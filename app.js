@@ -148,6 +148,9 @@ var app = new Vue({
       let data = await response.json();
       console.log(data);
       this.getThreads();
+      this.threadTitleInput = "";
+      this.threadDescriptionInput = "";
+      this.threadCategoryInput = "";
     },
 
     postPosts: async function (id) {
@@ -166,6 +169,7 @@ var app = new Vue({
       let data = await response.json();
       console.log(data);
       this.getThread(id);
+      this.postInput = "";
     },
 
     deleteThread: async function (id) {
@@ -175,6 +179,7 @@ var app = new Vue({
       });
       let data = await response.json();
       console.log(data);
+      this.getThreads();
     },
 
     deletePost: async function (threadid, postid) {

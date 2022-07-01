@@ -55,6 +55,7 @@
           </h1>
           <p>{{thread.description}}</p>
           <i>{{thread.user.fullname}}</i>
+          <button @click="deleteThread(thread._id)">Delete Thread</button>
         </div>
 
         <br /><br />
@@ -84,6 +85,11 @@
         <div v-for="(post,index) in currentThread.posts">
           {{currentThread.posts[index].body}} -
           <i>{{currentThread.posts[index].user.fullname}}</i>
+          <button
+            @click="deletePost(currentThread._id, currentThread.posts[index]._id)"
+          >
+            Delete Post
+          </button>
         </div>
 
         <br /><br />
