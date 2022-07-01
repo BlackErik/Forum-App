@@ -176,6 +176,19 @@ var app = new Vue({
       let data = await response.json();
       console.log(data);
     },
+
+    deletePost: async function (threadid, postid) {
+      let response = await fetch(
+        `${API_URL}/thread/${threadid}/post/${postid}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      );
+      let data = await response.json();
+      console.log(data);
+      this.getThread(threadid);
+    },
   },
   created: function () {
     this.getSession();
