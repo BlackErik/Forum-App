@@ -54,25 +54,41 @@
             {{thread.name}}
           </h1>
           <p>{{thread.description}}</p>
+          <i>{{thread.user.fullname}}</i>
         </div>
+
+        <br /><br />
+        <h1>Add A Thread</h1>
+        <input type="text" placeholder="title" v-model="threadTitleInput" />
+        <input
+          type="text"
+          placeholder="description"
+          v-model="threadDescriptionInput"
+        />
+        <input
+          type="text"
+          placeholder="category"
+          v-model="threadCategoryInput"
+        />
+        <button @click="postThread()">Post Thread</button>
       </div>
 
       <div v-if="page == 'thread'">
         <button @click="page='logged in'">Go Back</button>
         <h1>{{currentThread.name}}</h1>
         <p>{{currentThread.description}}</p>
-        <i>{{currentThread.user.username}}</i>
+        <i>{{currentThread.user.fullname}}</i>
         <br />
 
         <br />
         <div v-for="(post,index) in currentThread.posts">
           {{currentThread.posts[index].body}} -
-          <i>{{currentThread.posts[index].user.username}}</i>
+          <i>{{currentThread.posts[index].user.fullname}}</i>
         </div>
 
         <br /><br />
         <h3>Add A Post</h3>
-        <input type="test" placeholder="Leave A  Post" v-model="postInput" />
+        <input type="text" placeholder="Leave A  Post" v-model="postInput" />
         <button @click="postPosts(currentThread._id)">Add Post</button>
       </div>
     </div>

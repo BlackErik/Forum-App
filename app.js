@@ -13,6 +13,10 @@ var app = new Vue({
     newPasswordInput: "",
     newFullNameInput: "",
 
+    threadTitleInput: "",
+    threadDescriptionInput: "",
+    threadCategoryInput: "",
+
     postInput: "",
 
     threads: [],
@@ -127,10 +131,15 @@ var app = new Vue({
       console.log(data);
     },
 
-    postPosts: async function (id) {
-      let response = await fetch(`${API_URL}/thread/${id}/`, {
+    postThread: async function () {
+      let newThread = {
+        name: this.threadTitleInput,
+        description: this.threadDescriptionInput,
+        category: this.threadCategoryInput,
+      };
+      let response = await fetch(`${API_URL}/thread`, {
         method: "POST",
-        body: JSON.stringify(this.postInput),
+        body: JSON.stringify(newThread),
         headers: {
           "Content-Type": "application/json",
         },
@@ -138,6 +147,24 @@ var app = new Vue({
       });
       let data = await response.json();
       console.log(data);
+    },
+
+    postPosts: async function (id) {
+      let newPost = {
+        body: this.postInput,
+        thread_id: id,
+      };
+      let response = await fetch(`${API_URL}/thread/${id}/`, {
+        method: "POST",
+        body: JSON.stringify(newPost),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+      let data = await response.json();
+      console.log(data);
+      this.getThreads();
     },
   },
   created: function () {
