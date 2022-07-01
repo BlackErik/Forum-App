@@ -1,63 +1,51 @@
-const URL = "https://forum2022.codeschool.cloud";
+const API_URL = "https://forum2022.codeschool.cloud";
 
 var app = new Vue({
   el: "#app",
   data: {
     page: "login",
-
     loginEmailInput: "",
     loginPasswordInput: "",
 
+    errorMessage: "",
+
     newEmailInput: "",
     newPasswordInput: "",
-    newFullnameInput: "",
-
-    threads: [],
+    newFullNameInput: "",
   },
   methods: {
-    // change the page that the user sees
-    setPage: function (page) {
-      this.page = page;
-    },
-
-    // GET /session - Ask the server if we are logged in
+    //GET /session - Asks the server if we are logged in
     getSession: async function () {
-      let response = await fetch(`${URL}/session`, {
-        method: "GET",
+      let response = await fetch(`${API_URL}/session`, {
+        // method: "GET",
         credentials: "include",
       });
-
       // Are we logged in?
       if (response.status == 200) {
-        // logged in :)
-        console.log("logged in");
+        // logged in
+        console.log("logged in ");
         let data = await response.json();
         console.log(data);
 
-        // send the user to the home page
-        this.loadHomePage();
-        return;
+        this.page = "logged in";
       } else if (response.status == 401) {
-        // Not logged in :(
+        // not logged in
         console.log("Not logged in");
         let data = await response.json();
         console.log(data);
       } else {
-        console.log(
-          "Some sort of error when GETTING /session:",
-          response.status,
-          response
-        );
+        console.log("Some Error in GET /session", response.status, response);
       }
     },
-    // POST /session - Attempt to login
+
+    // POST /session - Attempt to Log in
     postSession: async function () {
       let loginCredentials = {
         username: this.loginEmailInput,
         password: this.loginPasswordInput,
       };
 
-      let response = await fetch(URL + "/session", {
+      let response = await fetch(`${API_URL}/session`, {
         method: "POST",
         body: JSON.stringify(loginCredentials),
         headers: {
@@ -66,119 +54,55 @@ var app = new Vue({
         credentials: "include",
       });
 
-      // 1. parse response body
-      let body;
-      try {
-        body = response.json();
-        // console.log(body);
-      } catch (error) {
-        console.log("Response body was not json.");
-      }
-
-      // 2. check - was the login successful?
+      // was the login successful
       if (response.status == 201) {
-        // successful login
+        console.log("Successful login attempt");
 
-        // clear inputs
         this.loginEmailInput = "";
         this.loginPasswordInput = "";
 
-        // take the user to the home page
-        this.loadHomePage();
+        this.errorMessage = "";
+        this.page = "logged in";
+        // take user to a home page
       } else if (response.status == 401) {
-        // unsuccessful login
+        console.log("Unsuccessful login attempt");
+        this.errorMessage = "Unsuccessful login";
 
-        // let the user know it was unsuccessful
-        alert("Unsuccessful login");
-
-        // clear password input
         this.loginPasswordInput = "";
       } else {
-        console.log(
-          "Some sort of error when POSTING /session:",
-          response.status,
-          response
-        );
+        console.log("Some error in POST /session", response.status, response);
+        this.errorMessage = "Unsuccessful login";
       }
     },
-    // POST /user - create new user
+
+    // POST /user - create a user
     postUser: async function () {
-      let newUser = {
+      let registrationCredentials = {
         username: this.newEmailInput,
-        fullname: this.newFullnameInput,
+        fullname: this.newFullNameInput,
         password: this.newPasswordInput,
       };
 
-      let response = await fetch(URL + "/user", {
+      let response = await fetch(`${API_URL}/user`, {
         method: "POST",
-        body: JSON.stringify(newUser),
+        body: JSON.stringify(registrationCredentials),
         headers: {
           "Content-Type": "application/json",
         },
         credentials: "include",
       });
-
-      // parse the response body
-      let body;
-      try {
-        body = response.json();
-      } catch (error) {
-        console.error("Error parsing body as JSON:", error);
-        body = "An Unknown Error has occured";
-      }
-
+      let body = response.json();
+      console.log(body);
       if (response.status == 201) {
-        // user successfully created
+        console.log("sucessful create user attempt");
         this.newEmailInput = "";
-        this.newFullnameInput = "";
         this.newPasswordInput = "";
-
-        // send them back to the login page
-        this.setPage("login");
+        this.newFullNameInput = "";
+        this.page = "login";
+        this.errorMessage = "";
       } else {
-        // error creating user
-        this.newPasswordInput = "";
-
-        // create notification
-      }
-    },
-    loadHomePage: async function () {
-      await this.getThread();
-      this.setPage("home");
-    },
-    getThread: async function () {
-      let response = await fetch(URL + "/thread", {
-        credentials: "include",
-      });
-
-      // check response status
-      if (response.status == 200) {
-        // successfully got the data
-        let body = await response.json();
-        this.threads = body;
-      } else {
-        console.error("Error fetching threads:", response.status);
-      }
-    },
-    loadThreadPage: async function () {
-      this.setPage("thread");
-    },
-    getSingleThread: async function (id) {
-      let response = await fetch(URL + "/thread/" + id, {
-        credentials: "include",
-      });
-
-      // check response status
-      if (response.status == 200) {
-        this.currentThread = await response.json();
-        this.loadThreadPage();
-      } else {
-        console.error(
-          "Error fetching individual request with id",
-          id,
-          "- status:",
-          response.status
-        );
+        console.log("Some error in POST /user", response.status, response);
+        this.errorMessage = "Registration Unsuccessful";
       }
     },
   },
