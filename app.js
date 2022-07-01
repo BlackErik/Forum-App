@@ -147,6 +147,7 @@ var app = new Vue({
       });
       let data = await response.json();
       console.log(data);
+      this.getThreads();
     },
 
     postPosts: async function (id) {
@@ -154,7 +155,7 @@ var app = new Vue({
         body: this.postInput,
         thread_id: id,
       };
-      let response = await fetch(`${API_URL}/thread/${id}/`, {
+      let response = await fetch(`${API_URL}/post`, {
         method: "POST",
         body: JSON.stringify(newPost),
         headers: {
@@ -164,7 +165,6 @@ var app = new Vue({
       });
       let data = await response.json();
       console.log(data);
-      this.getThreads();
     },
   },
   created: function () {
