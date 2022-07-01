@@ -17,3 +17,7 @@ input {
 .error-message {
   color: red;
 }
+
+.thread {
+  cursor: pointer;
+}

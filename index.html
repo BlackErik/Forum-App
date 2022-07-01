@@ -49,12 +49,26 @@
       <div v-if="page =='logged in'">
         <h1 style="border-bottom: 1px solid black">Forum App</h1>
         <br />
-        <thread-display
-          v-for="(thread,index) in threads"
-          v-bind:thread="thread"
-          v-bind:index="index"
-          v-bind:threads="threads"
-        ></thread-display>
+        <div v-for="(thread, index) in threads">
+          <h1 class="thread" @click="getThread(thread._id), page = 'thread'">
+            {{thread.name}}
+          </h1>
+          <p>{{thread.description}}</p>
+        </div>
+      </div>
+
+      <div v-if="page == 'thread'">
+        <button @click="page='logged in'">Go Back</button>
+        <h1>{{currentThread.name}}</h1>
+        <p>{{currentThread.description}}</p>
+        <i>{{currentThread.user.username}}</i>
+        <br />
+
+        <br />
+        <div v-for="(post,index) in currentThread.posts">
+          {{currentThread.posts[index].body}} -
+          <i>{{currentThread.posts[index].user.username}}</i>
+        </div>
       </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>

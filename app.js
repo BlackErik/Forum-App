@@ -2,7 +2,7 @@ const API_URL = "https://forum2022.codeschool.cloud";
 
 Vue.component("thread-display", {
   template: `
-  <div>
+  <div class="thread">
     <h1> {{threads[index].name}} </h1>
     <p> {{threads[index].description}}</p>
   </div>
@@ -26,6 +26,7 @@ var app = new Vue({
     newPasswordInput: "",
     newFullNameInput: "",
     threads: [],
+    currentThread: [],
   },
   methods: {
     //GET /session - Asks the server if we are logged in
@@ -126,6 +127,13 @@ var app = new Vue({
       });
       let data = await response.json();
       this.threads = data;
+      console.log(data);
+    },
+
+    getThread: async function (id) {
+      let response = await fetch(`${API_URL}/thread/${id}/`);
+      let data = await response.json();
+      this.currentThread = data;
       console.log(data);
     },
   },
