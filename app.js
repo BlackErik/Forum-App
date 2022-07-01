@@ -1,18 +1,5 @@
 const API_URL = "https://forum2022.codeschool.cloud";
 
-Vue.component("thread-display", {
-  template: `
-  <div class="thread">
-    <h1> {{threads[index].name}} </h1>
-    <p> {{threads[index].description}}</p>
-  </div>
-  `,
-  data: function () {
-    return {};
-  },
-  props: ["threads", "index"],
-});
-
 var app = new Vue({
   el: "#app",
   data: {
@@ -25,6 +12,9 @@ var app = new Vue({
     newEmailInput: "",
     newPasswordInput: "",
     newFullNameInput: "",
+
+    postInput: "",
+
     threads: [],
     currentThread: [],
   },
@@ -134,6 +124,19 @@ var app = new Vue({
       let response = await fetch(`${API_URL}/thread/${id}/`);
       let data = await response.json();
       this.currentThread = data;
+      console.log(data);
+    },
+
+    postPosts: async function (id) {
+      let response = await fetch(`${API_URL}/thread/${id}/`, {
+        method: "POST",
+        body: JSON.stringify(this.postInput),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+      let data = await response.json();
       console.log(data);
     },
   },
