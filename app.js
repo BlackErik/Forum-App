@@ -1,5 +1,18 @@
 const API_URL = "https://forum2022.codeschool.cloud";
 
+Vue.component("thread-display", {
+  template: `
+  <div>
+    <h1> {{threads[index].name}} </h1>
+    <p> {{threads[index].description}}</p>
+  </div>
+  `,
+  data: function () {
+    return {};
+  },
+  props: ["threads", "index"],
+});
+
 var app = new Vue({
   el: "#app",
   data: {
