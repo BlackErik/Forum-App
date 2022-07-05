@@ -29,4 +29,16 @@ app.post("/users", async (req, res) => {
   }
 });
 
+app.post("/thread", (req, res) => {});
+
+app.get("/thread/:id", (req, res) => {});
+
+app.get("/thread", (req, res) => {});
+
+app.delete("/thread/:id", (req, res) => {});
+
+app.post("/post", (req, res) => {});
+
+app.delete("/thread/:thread_id/post/:post_id", (req, res) => {});
+
 module.exports = app;
