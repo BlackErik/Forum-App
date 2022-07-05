@@ -1,4 +1,4 @@
-const app = require("./server");
+const app = require("./server/server");
 
 const { connect, onConnect } = require("./persist/connect");
 

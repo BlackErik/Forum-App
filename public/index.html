@@ -32,7 +32,7 @@
 
       <div v-if="page == 'registration'">
         <h1>Registration Form</h1>
-        <input v-model="newEmailInput" placeholder="Email" />
+        <input v-model="newEmailInput" placeholder="Email/Username" />
         <br /><br />
         <input
           type="password"
@@ -54,7 +54,7 @@
             {{thread.name}}
           </h1>
           <p>{{thread.description}}</p>
-          <i>{{thread.user.fullname}}</i>
+          <i>{{thread.user.username}}</i>
           <button @click="deleteThread(thread._id)">Delete Thread</button>
         </div>
 
@@ -78,13 +78,13 @@
         <button @click="page='logged in'">Go Back</button>
         <h1>{{currentThread.name}}</h1>
         <p>{{currentThread.description}}</p>
-        <i>{{currentThread.user.fullname}}</i>
+        <i>{{currentThread.user.username}}</i>
         <br />
 
         <br />
         <div v-for="(post,index) in currentThread.posts">
           {{currentThread.posts[index].body}} -
-          <i>{{currentThread.posts[index].user.fullname}}</i>
+          <i>{{currentThread.posts[index].user.username}}</i>
           <button
             @click="deletePost(currentThread._id, currentThread.posts[index]._id)"
           >

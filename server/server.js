@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const { User } = require("./persist/model");
+const { User } = require("../persist/model");
 const app = express();
 
 app.use(cors());
@@ -10,7 +10,7 @@ app.use(express.static(`${__dirname}/public/`));
 
 app.post("/users", async (req, res) => {
   try {
-    User.create({
+    await User.create({
       username: req.body.username,
       fullname: req.body.fullname,
       password: req.body.password,
