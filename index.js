@@ -1,10 +1,6 @@
-const express = require("express");
-
-const app = express();
+const app = require("./server");
 
 const { connect, onConnect } = require("./persist/connect");
-
-app.use(express.json());
 
 const port = 8080;
 

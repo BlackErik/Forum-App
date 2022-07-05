@@ -4,12 +4,16 @@ const db = mongoose.connection;
 
 const passwd = "BlackErik";
 
-function connect(user, password, host, port, db) {
+async function connect(user, password, host, port, db) {
   const connectionString = `mongodb+srv://BlackErik:${passwd}@cluster0.69o07ey.mongodb.net/?retryWrites=true&w=majority`;
   try {
-    mongoose.connect(connectionString);
+    await mongoose.connect(connectionString, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
   } catch (err) {
     console.log("error in connecting to mongoose", err);
+    throw "mongo couldn't connect";
   }
 }
 

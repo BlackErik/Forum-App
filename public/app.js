@@ -1,4 +1,4 @@
-const API_URL = "https://forum2022.codeschool.cloud";
+const API_URL = "http://localhost:8080/";
 
 var app = new Vue({
   el: "#app",
