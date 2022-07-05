@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const { User } = require("../persist/model");
+const { User, Thread } = require("../persist/model");
 const setUpAuth = require("./auth");
 const setUpSession = require("./session");
 
@@ -20,7 +20,7 @@ app.post("/users", async (req, res) => {
       fullname: req.body.fullname,
       password: req.body.password,
     });
-    res.status(201).json(User);
+    res.status(201).json(user);
   } catch (err) {
     res.status(500).json({
       message: "post request failed to create user",
@@ -29,7 +29,27 @@ app.post("/users", async (req, res) => {
   }
 });
 
-app.post("/thread", (req, res) => {});
+app.post("/thread", async (req, res) => {
+  if (!req.user) {
+    res.status(401).json({ message: "unauthorized" });
+    return;
+  }
+
+  try {
+    let thread = await Thread.create({
+      user_id: req.user.id,
+      name: req.body.name,
+      description: req.body.description,
+      category: req.body.category,
+    });
+    res.status(201).json(thread);
+  } catch (err) {
+    res.status(500).json({
+      message: "could not create thread",
+      error: err,
+    });
+  }
+});
 
 app.get("/thread/:id", (req, res) => {});
 
