@@ -1,16 +1,21 @@
 const express = require("express");
+const app = express();
 const cors = require("cors");
 const { User } = require("../persist/model");
-const app = express();
+const setUpAuth = require("./auth");
+const setUpSession = require("./session");
 
 app.use(cors());
 app.use(express.json());
 
-app.use(express.static(`${__dirname}/public/`));
+app.use(express.static(`${__dirname}/../public/`));
+
+setUpSession(app);
+setUpAuth(app);
 
 app.post("/users", async (req, res) => {
   try {
-    await User.create({
+    let user = await User.create({
       username: req.body.username,
       fullname: req.body.fullname,
       password: req.body.password,
