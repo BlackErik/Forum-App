@@ -19,7 +19,6 @@
   "homepage": "https://github.com/BlackErik/Forum-App#readme",
   "dependencies": {
     "cors": "^2.8.5",
-    "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "express-session": "^1.17.3",
     "flags": "^0.1.3",

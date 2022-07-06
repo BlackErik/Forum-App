@@ -54,21 +54,25 @@ app.post("/thread", async (req, res) => {
 app.get("/thread/:id", (req, res) => {});
 
 app.get("/thread", async (req, res) => {
-  if (!req.user) {
-    res.status(401).json({ message: "unauthorized" });
-    return;
-  }
   try {
-    let threads = await Thread.find({}, "-posts");
-    let users = await User.find();
-    console.log(users);
-    res.json(threads);
+    threads = await Thread.find({}, "-posts");
   } catch (err) {
     res.status(500).json({
-      message: "could not create thread",
+      message: "could not get threads",
       error: err,
     });
   }
+
+  for (let i in threads) {
+    try {
+      threads[i] = threads[i].toObject();
+      let user = await User.findById(threads[i].user_id, "-password");
+      threads[i].user = user;
+    } catch (err) {
+      console.log("unable to get user when getting thread", err);
+    }
+  }
+  res.status(200).json(threads);
 });
 
 app.delete("/thread/:id", (req, res) => {});
