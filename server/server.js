@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const { User, Thread } = require("../persist/model");
+const { User, Thread, Post } = require("../persist/model");
 const setUpAuth = require("./auth");
 const setUpSession = require("./session");
 
@@ -79,7 +79,7 @@ app.get("/thread/:id", async (req, res) => {
       error: err,
     });
   }
-  // TODO: GET POSTS
+  // TODO: GET POSTS`
   res.status(200).json(thread);
 });
 
@@ -108,7 +108,45 @@ app.get("/thread", async (req, res) => {
 
 app.delete("/thread/:id", (req, res) => {});
 
-app.post("/post", (req, res) => {});
+app.post("/post", async (req, res) => {
+  if (!req.user) {
+    res.status(401).json({ message: "unauthenticated" });
+    return;
+  }
+
+  let thread;
+
+  try {
+    thread = await Thread.findByIdAndUpdate(
+      req.body.thread_id,
+      {
+        $push: {
+          posts: {
+            user_id: req.user.id,
+            body: req.body.body,
+            thread_id: req.body.thread_id,
+          },
+        },
+      },
+      {
+        new: true,
+      }
+    );
+
+    if (!thread) {
+      res.status(404).json({
+        message: `thread not found`,
+        id: req.params.thread_id,
+      });
+    }
+  } catch (err) {
+    res.status(500).json({
+      message: `failed to insert post`,
+      error: err,
+    });
+  }
+  res.status(201).json(thread.posts[thread.posts.length - 1]);
+});
 
 app.delete("/thread/:thread_id/post/:post_id", (req, res) => {});
 
