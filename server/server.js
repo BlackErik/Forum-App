@@ -121,6 +121,7 @@ app.get("/thread", async (req, res) => {
 });
 
 app.delete("/thread/:id", async (req, res) => {
+  // check auth
   if (!req.user) {
     res.status(401).json({ message: "unnauthenticated" });
     return;
@@ -129,6 +130,7 @@ app.delete("/thread/:id", async (req, res) => {
 
   let thread;
 
+  // pull thread
   try {
     thread = await Thread.findById(req.params.id);
   } catch (err) {
@@ -147,11 +149,13 @@ app.delete("/thread/:id", async (req, res) => {
     return;
   }
 
+  // check that the thread is "owned by the requesting user"
   if (thread.user_id != req.user.id) {
     res.status(401).json({ message: "not authorized" });
     return;
   }
 
+  // delete the thread
   try {
     await Thread.findByIdAndDelete(req.params.id);
   } catch (err) {
@@ -164,11 +168,6 @@ app.delete("/thread/:id", async (req, res) => {
   res.status(200).json({
     message: "deleted post",
   });
-  // check auth
-  // pull thread
-  // check that the thread is "owned by the requesting user"
-  // delete the thread
-  // return the deleted thread
 });
 
 app.post("/post", async (req, res) => {
@@ -211,6 +210,12 @@ app.post("/post", async (req, res) => {
   res.status(201).json(thread.posts[thread.posts.length - 1]);
 });
 
-app.delete("/thread/:thread_id/post/:post_id", (req, res) => {});
+app.delete("/thread/:thread_id/post/:post_id", (req, res) => {
+  // check auth
+  // pull thread
+  // check that the post on the thread is "owned" by the requesting user
+  // delete the post
+  // return the deleted post
+});
 
 module.exports = app;
