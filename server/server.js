@@ -51,7 +51,21 @@ app.post("/thread", async (req, res) => {
   }
 });
 
-app.get("/thread/:id", (req, res) => {});
+app.get("/thread/:id", async (req, res) => {
+  const id = req.params.id;
+  try {
+    thread = await Thread.findById(id);
+    thread = thread.toObject();
+    let user = await User.findById(thread.user_id, "-password");
+    thread.user = user;
+    res.status(200).json(thread);
+  } catch {
+    res.status(500).json({
+      message: "could not get thread",
+      error: err,
+    });
+  }
+});
 
 app.get("/thread", async (req, res) => {
   try {
