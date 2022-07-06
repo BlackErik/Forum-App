@@ -120,7 +120,56 @@ app.get("/thread", async (req, res) => {
   res.status(200).json(threads);
 });
 
-app.delete("/thread/:id", (req, res) => {});
+app.delete("/thread/:id", async (req, res) => {
+  if (!req.user) {
+    res.status(401).json({ message: "unnauthenticated" });
+    return;
+  }
+  console.log(`request to delete a single thread with id ${req.params.id}`);
+
+  let thread;
+
+  try {
+    thread = await Thread.findById(req.params.id);
+  } catch (err) {
+    res.status(500).json({
+      message: "failed to delete thread",
+      error: err,
+    });
+    return;
+  }
+
+  if (thread === null) {
+    res.status(404).json({
+      message: "thread not found",
+      thread_id: req.params.thread_id,
+    });
+    return;
+  }
+
+  if (thread.user_id != req.user.id) {
+    res.status(401).json({ message: "not authorized" });
+    return;
+  }
+
+  try {
+    await Thread.findByIdAndDelete(req.params.id);
+  } catch (err) {
+    res.status(500).json({
+      message: "failed to delete post",
+      error: err,
+    });
+    return;
+  }
+  res.status(200).json({
+    message: "deleted post",
+  });
+  // check auth
+  // pull thread
+  // check that the thread is "owned by the requesting user"
+  // delete the thread
+  // return the deleted thread
+});
 
 app.post("/post", async (req, res) => {
   if (!req.user) {
