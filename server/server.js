@@ -53,7 +53,23 @@ app.post("/thread", async (req, res) => {
 
 app.get("/thread/:id", (req, res) => {});
 
-app.get("/thread", (req, res) => {});
+app.get("/thread", async (req, res) => {
+  if (!req.user) {
+    res.status(401).json({ message: "unauthorized" });
+    return;
+  }
+  try {
+    let threads = await Thread.find({}, "-posts");
+    let users = await User.find();
+    console.log(users);
+    res.json(threads);
+  } catch (err) {
+    res.status(500).json({
+      message: "could not create thread",
+      error: err,
+    });
+  }
+});
 
 app.delete("/thread/:id", (req, res) => {});
 
