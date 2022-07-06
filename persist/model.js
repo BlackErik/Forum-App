@@ -36,7 +36,7 @@ const threadSchema = mongoose.Schema(
     },
     name: { type: String, required: true, default: "" },
     description: { type: String, required: true, default: "" },
-    posts: { type: [postSchema], required: true, default: [] },
+    posts: { type: [postSchema], required: false, default: [] },
     category: { type: String, required: true, default: "" },
   },
   {
