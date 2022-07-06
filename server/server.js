@@ -58,6 +58,7 @@ app.get("/thread/:id", async (req, res) => {
     thread = thread.toObject();
     let user = await User.findById(thread.user_id, "-password");
     thread.user = user;
+    // TODO: GET POSTS
     res.status(200).json(thread);
   } catch {
     res.status(500).json({
