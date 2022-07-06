@@ -67,6 +67,7 @@ app.get("/thread/:id", async (req, res) => {
       message: "could not get thread",
       error: err,
     });
+    return;
   }
 
   try {
@@ -78,15 +79,21 @@ app.get("/thread/:id", async (req, res) => {
       message: "couldn't get user",
       error: err,
     });
+    // TODO: GET POSTS`
+    return;
   }
-  // TODO: GET POSTS`
-  try {
-  } catch (err) {
-    res.status(500).json({
-      message: "couldn't get user for post",
-      error: err,
-    });
+
+  for (let i in thread.posts) {
+    try {
+      thread.posts[i].user = await User.findById(
+        thread.posts[i].user_id,
+        "-password"
+      );
+    } catch (err) {
+      console.log("unable to get user when getting thread", err);
+    }
   }
+
   res.status(200).json(thread);
 });
 
