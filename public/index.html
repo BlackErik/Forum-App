@@ -47,9 +47,15 @@
       </div>
 
       <div v-if="page =='logged in'">
+        <input
+          id="search-bar"
+          type="text"
+          placeholder="search"
+          v-model="searchInput"
+        />
         <h1 style="border-bottom: 1px solid black">Forum App</h1>
         <br />
-        <div v-for="(thread, index) in threads">
+        <div v-for="(thread, index) in filteredThreads">
           <h1 class="thread" @click="getThread(thread._id), page = 'thread'">
             {{thread.name}}
           </h1>

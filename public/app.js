@@ -9,6 +9,8 @@ var app = new Vue({
 
     errorMessage: "",
 
+    searchInput: "",
+
     newEmailInput: "",
     newPasswordInput: "",
     newFullNameInput: "",
@@ -198,5 +200,20 @@ var app = new Vue({
   created: function () {
     this.getSession();
     this.getThreads();
+  },
+  computed: {
+    filteredThreads: function () {
+      var threadArray = [...this.threads];
+      var searchString = this.searchInput;
+
+      searchString = searchString.trim().toLowerCase();
+
+      threadArray = threadArray.filter((thread) => {
+        if (thread.name.toLowerCase().indexOf(searchString) != -1) {
+          return thread;
+        }
+      });
+      return threadArray;
+    },
   },
 });
