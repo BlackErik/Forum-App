@@ -38,7 +38,6 @@ var app = new Vue({
         console.log("logged in ");
         let data = await response.json();
         console.log(data);
-
         this.page = "logged in";
       } else if (response.status == 401) {
         // not logged in
