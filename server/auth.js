@@ -26,6 +26,7 @@ const setUpAuth = function (app) {
       id: user._id,
       username: user.username,
       fullname: user.fullname,
+      role: user.role,
     });
   });
   passport.deserializeUser(function (user, cb) {
@@ -37,6 +38,7 @@ const setUpAuth = function (app) {
       message: "successfully create session",
       username: req.user.username,
       fullname: req.user.fullname,
+      role: req.user.role,
     });
   });
 

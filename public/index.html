@@ -42,6 +42,9 @@
         <br /><br />
         <input v-model="newFullNameInput" placeholder="Full Name" />
         <br /><br />
+        <input v-model="newRoleInput" placeholder="role" />
+
+        <br /><br />
         <button @click="postUser()">Register</button>
         <h3 class="error-message">{{ errorMessage }}</h3>
       </div>

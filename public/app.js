@@ -14,6 +14,7 @@ var app = new Vue({
     newEmailInput: "",
     newPasswordInput: "",
     newFullNameInput: "",
+    newRoleInput: "",
 
     threadTitleInput: "",
     threadDescriptionInput: "",
@@ -92,6 +93,7 @@ var app = new Vue({
         username: this.newEmailInput,
         fullname: this.newFullNameInput,
         password: this.newPasswordInput,
+        role: this.newRoleInput,
       };
 
       let response = await fetch(`${API_URL}/users`, {
@@ -216,4 +218,9 @@ var app = new Vue({
       return threadArray;
     },
   },
+  // pseudocode for checking if a delete button should be shown:
+  // checkIfDeletable()
+  // if user.id == post.user.id || user.role == "admin" {
+  //    showDeleteButton
+  // }
 });

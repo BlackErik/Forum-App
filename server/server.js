@@ -19,6 +19,7 @@ app.post("/users", async (req, res) => {
       username: req.body.username,
       fullname: req.body.fullname,
       password: req.body.password,
+      role: req.body.role,
     });
     res.status(201).json(user);
   } catch (err) {
@@ -122,7 +123,9 @@ app.get("/thread", async (req, res) => {
 
 app.delete("/thread/:id", async (req, res) => {
   // check auth
-  if (!req.user) {
+  if (!req.user && req.user.role != "admin") {
+    console.log(req.user);
+    console.log(req.user.role);
     res.status(401).json({ message: "unnauthenticated" });
     return;
   }
@@ -150,7 +153,7 @@ app.delete("/thread/:id", async (req, res) => {
   }
 
   // check that the thread is "owned by the requesting user"
-  if (thread.user_id != req.user.id) {
+  if (thread.user_id != req.user.id && req.user.role != "admin") {
     res.status(401).json({ message: "not authorized" });
     return;
   }
@@ -213,8 +216,9 @@ app.post("/post", async (req, res) => {
 app.delete("/thread/:thread_id/post/:post_id", async (req, res) => {
   let thread;
   let post;
-  if (!req.user) {
+  if (!req.user && req.user.role != "admin") {
     res.status(401).json({ message: "unathenticated" });
+    return;
   }
 
   try {
@@ -227,6 +231,7 @@ app.delete("/thread/:thread_id/post/:post_id", async (req, res) => {
       message: "error finding thread when deleting post",
       error: err,
     });
+    return;
   }
 
   if (!thread) {
@@ -237,17 +242,23 @@ app.delete("/thread/:thread_id/post/:post_id", async (req, res) => {
     return;
   }
 
-  let isSameUser = false;
+  // assume they aren't authorized.
+  let authorizedToDelete = false;
+
+  // admins can always delete
+  if (req.user.role == "admin") authorizedToDelete = true;
+
   for (let i in thread.posts) {
     if (thread.posts[i]._id == req.params.post_id) {
       post = thread.posts[i];
       if (thread.posts[i].user_id == req.user.id) {
-        isSameUser = true;
+        // if the user who created the post is the current user, they can delete
+        authorizedToDelete = true;
       }
     }
   }
 
-  if (!isSameUser) {
+  if (!authorizedToDelete) {
     res.status(401).json({ message: "unnathorized" });
     return;
   }
@@ -265,6 +276,7 @@ app.delete("/thread/:thread_id/post/:post_id", async (req, res) => {
       message: "error deleting post",
       error: err,
     });
+    return;
   }
   res.status(200).json(post);
 });
