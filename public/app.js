@@ -29,6 +29,12 @@ var app = new Vue({
     currentUser: {},
   },
   methods: {
+    changeClass(index) {
+      if (this.threads[index].user.role == "admin") {
+        return "green";
+      }
+    },
+
     //GET /session - Asks the server if we are logged in
     getSession: async function () {
       let response = await fetch(`${API_URL}/session`, {

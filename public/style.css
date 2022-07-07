@@ -21,3 +21,7 @@ input {
 .thread {
   cursor: pointer;
 }
+
+.green {
+  color: green;
+}

@@ -58,7 +58,10 @@
         />
         <h1 style="border-bottom: 1px solid black">Forum App</h1>
         <br />
-        <div v-for="(thread, index) in filteredThreads">
+        <div
+          v-for="(thread, index) in filteredThreads"
+          :class="changeClass(index)"
+        >
           <h1 class="thread" @click="getThread(thread._id), page = 'thread'">
             {{thread.name}}
           </h1>
