@@ -210,12 +210,63 @@ app.post("/post", async (req, res) => {
   res.status(201).json(thread.posts[thread.posts.length - 1]);
 });
 
-app.delete("/thread/:thread_id/post/:post_id", (req, res) => {
-  // check auth
-  // pull thread
-  // check that the post on the thread is "owned" by the requesting user
-  // delete the post
-  // return the deleted post
+app.delete("/thread/:thread_id/post/:post_id", async (req, res) => {
+  let thread;
+  let post;
+  if (!req.user) {
+    res.status(401).json({ message: "unathenticated" });
+  }
+
+  try {
+    thread = await Thread.findOne({
+      _id: req.params.thread_id,
+      "posts._id": req.params.post_id,
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: "error finding thread when deleting post",
+      error: err,
+    });
+  }
+
+  if (!thread) {
+    res.status(404).json({
+      message: "thread not found when deleting post",
+      thread_id: req.params.thread_id,
+    });
+    return;
+  }
+
+  let isSameUser = false;
+  for (let i in thread.posts) {
+    if (thread.posts[i]._id == req.params.post_id) {
+      post = thread.posts[i];
+      if (thread.posts[i].user_id == req.user.id) {
+        isSameUser = true;
+      }
+    }
+  }
+
+  if (!isSameUser) {
+    res.status(401).json({ message: "unnathorized" });
+    return;
+  }
+
+  try {
+    await Thread.findByIdAndUpdate(req.params.thread_id, {
+      $pull: {
+        posts: {
+          _id: req.params.post_id,
+        },
+      },
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: "error deleting post",
+      error: err,
+    });
+  }
+  res.status(200).json(post);
 });
 
 module.exports = app;
