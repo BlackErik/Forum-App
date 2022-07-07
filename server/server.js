@@ -52,6 +52,21 @@ app.post("/thread", async (req, res) => {
   }
 });
 
+app.get("/users/", async (req, res) => {
+  let currentUser;
+  try {
+    currentUser = req.user;
+    res.status(200).json(currentUser);
+    console.log(currentUser);
+  } catch (err) {
+    res.status(500).json({
+      message: "could not get user",
+      error: err,
+    });
+    return;
+  }
+});
+
 app.get("/thread/:id", async (req, res) => {
   const id = req.params.id;
   let thread;

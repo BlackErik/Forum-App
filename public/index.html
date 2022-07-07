@@ -64,7 +64,12 @@
           </h1>
           <p>{{thread.description}}</p>
           <i>{{thread.user.username}}</i>
-          <button @click="deleteThread(thread._id)">Delete Thread</button>
+          <button
+            v-if="checkIfDeleteable(thread)"
+            @click="deleteThread(thread._id)"
+          >
+            Delete Thread
+          </button>
         </div>
 
         <br /><br />
@@ -87,7 +92,7 @@
         <button @click="page='logged in'">Go Back</button>
         <h1>{{currentThread.name}}</h1>
         <p>{{currentThread.description}}</p>
-        <!-- <i>{{currentThread.user.username}}</i> -->
+        <i>{{currentThread.user.username}}</i>
         <br />
 
         <br />
@@ -95,6 +100,7 @@
           {{currentThread.posts[index].body}} -
           <i>{{currentThread.posts[index].user.username}}</i>
           <button
+            v-if="checkIfDeleteable(post)"
             @click="deletePost(currentThread._id, currentThread.posts[index]._id)"
           >
             Delete Post

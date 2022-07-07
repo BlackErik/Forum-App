@@ -1,3 +1,5 @@
+// const { post } = require("../server/server");
+
 const API_URL = "http://localhost:8080";
 
 var app = new Vue({
@@ -24,6 +26,7 @@ var app = new Vue({
 
     threads: [],
     currentThread: [],
+    currentUser: {},
   },
   methods: {
     //GET /session - Asks the server if we are logged in
@@ -47,6 +50,7 @@ var app = new Vue({
       } else {
         console.log("Some Error in GET /session", response.status, response);
       }
+      await this.getUser();
     },
 
     // POST /session - Attempt to Log in
@@ -75,6 +79,7 @@ var app = new Vue({
         this.errorMessage = "";
         this.page = "logged in";
         // take user to a home page
+        await this.getUser();
       } else if (response.status == 401) {
         console.log("Unsuccessful login attempt");
         this.errorMessage = "Unsuccessful login";
@@ -132,6 +137,14 @@ var app = new Vue({
       let data = await response.json();
       this.currentThread = data;
       console.log(data);
+    },
+
+    getUser: async function () {
+      let response = await fetch(`${API_URL}/users/`);
+      let data = await response.json();
+      this.currentUser = data;
+      console.log(data);
+      console.log("user gotten: ", data);
     },
 
     postThread: async function () {
@@ -196,6 +209,15 @@ var app = new Vue({
       let data = await response.json();
       console.log(data);
       this.getThread(threadid);
+    },
+
+    checkIfDeleteable: function (thread) {
+      if (
+        this.currentUser.id == thread.user._id ||
+        this.currentUser.role == "admin"
+      ) {
+        return true;
+      }
     },
   },
   created: function () {
